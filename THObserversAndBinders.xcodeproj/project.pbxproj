@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B66D775175DBA2500599B28 /* THObserversAndBinders.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D78301D1667A93600F83BC7 /* THObserversAndBinders.h */; };
+		7B66D776175DBA2500599B28 /* THObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D7830411667AA6800F83BC7 /* THObserver.h */; };
+		7B66D777175DBA2500599B28 /* THBinder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D7830461667E24D00F83BC7 /* THBinder.h */; };
 		7D7830191667A93600F83BC7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D7830181667A93600F83BC7 /* Foundation.framework */; };
 		7D7830281667A93600F83BC7 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D7830271667A93600F83BC7 /* SenTestingKit.framework */; };
 		7D78302A1667A93600F83BC7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D7830291667A93600F83BC7 /* UIKit.framework */; };
@@ -32,7 +35,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		7B66D774175DBA0F00599B28 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				7B66D775175DBA2500599B28 /* THObserversAndBinders.h in CopyFiles */,
+				7B66D776175DBA2500599B28 /* THObserver.h in CopyFiles */,
+				7B66D777175DBA2500599B28 /* THBinder.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		7BBF83051764900F0026941D /* AZObserversAndBinders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AZObserversAndBinders.h; sourceTree = "<group>"; };
+		7BBF83061764900F0026941D /* AZObserversAndBinders.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AZObserversAndBinders.m; sourceTree = "<group>"; };
 		7D7830151667A93600F83BC7 /* libTHObserversAndBinders.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTHObserversAndBinders.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D7830181667A93600F83BC7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7D78301C1667A93600F83BC7 /* THObserversAndBinders-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "THObserversAndBinders-Prefix.pch"; sourceTree = "<group>"; };
@@ -115,6 +135,8 @@
 				7D7830461667E24D00F83BC7 /* THBinder.h */,
 				7D7830471667E24D00F83BC7 /* THBinder.m */,
 				7D78301B1667A93600F83BC7 /* Supporting Files */,
+				7BBF83051764900F0026941D /* AZObserversAndBinders.h */,
+				7BBF83061764900F0026941D /* AZObserversAndBinders.m */,
 			);
 			path = THObserversAndBinders;
 			sourceTree = "<group>";
@@ -169,6 +191,7 @@
 				7D7830111667A93600F83BC7 /* Sources */,
 				7D7830121667A93600F83BC7 /* Frameworks */,
 				7D7830401667A94400F83BC7 /* Headers */,
+				7B66D774175DBA0F00599B28 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -348,6 +371,8 @@
 					armv7,
 					x86_64,
 					armv7s,
+					x86_64,
+					i386,
 				);
 				DSTROOT = /tmp/THObserversAndBinders.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -357,6 +382,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macos";
+				VALID_ARCHS = "armv7 armv7s x86_64 i386";
 			};
 			name = Debug;
 		};
@@ -367,6 +393,8 @@
 					armv7,
 					x86_64,
 					armv7s,
+					x86_64,
+					i386,
 				);
 				DSTROOT = /tmp/THObserversAndBinders.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -376,6 +404,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macos";
+				VALID_ARCHS = "armv7 armv7s x86_64 i386";
 			};
 			name = Release;
 		};

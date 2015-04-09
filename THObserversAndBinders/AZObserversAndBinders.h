@@ -2,28 +2,23 @@
 //  THObserver.h - THObserversAndBinders
 //  Created by James Montgomerie on 29/11/2012. Copyright (c) 2012 James Montgomerie.
 
-#import <Foundation/Foundation.h>
-
 @interface THObserver : NSObject
 
 #pragma mark - Block-based observers.
 
-typedef void(^THObserverBlock)(void);
-typedef void(^THObserverBlockWithOldAndNew)(id oldValue, id newValue);
-typedef void(^THObserverBlockWithChangeDictionary)(NSDictionary *change);
 
 + observerForObject:x
             keyPath:(NSString*)kP
-              block:(THObserverBlock)_;
+              block:(VBlk)b ___
 
 + observerForObject:x
             keyPath:(NSString*)kP
-     oldAndNewBlock:(THObserverBlockWithOldAndNew)_;
+     oldAndNewBlock:(ObjObjBlk)b ___
 
 + observerForObject:object
             keyPath:(NSString*)kP
             options:(NSKeyValueObservingOptions)opts
-        changeBlock:(THObserverBlockWithChangeDictionary)_;
+        changeBlock:(DBlk)b ___
 
 #pragma mark - Target-action based observers.
 
@@ -95,7 +90,7 @@ typedef void(^THObserverBlockWithChangeDictionary)(NSDictionary *change);
     The THObserver will do this cleanly when it deallocs, \
     but calling it manually can be useful in ensuring an orderly teardown.
 
-- (void) stopObserving;
+- _Void_ stopObserving;
 
 @end
 
@@ -118,6 +113,6 @@ typedef id(^THBinderTransformationBlock)(id value);
     The THBinder will do this cleanly when it deallocs, \
     but calling it manually can be useful in ensuring an orderly teardown.
 
-- (void) stopBinding;
+- _Void_ stopBinding;
 
 @end

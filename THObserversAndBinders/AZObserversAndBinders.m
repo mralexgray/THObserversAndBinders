@@ -14,18 +14,18 @@
 //typedef void(^THObserverBlockWithOldAndNew)(id oldValue, id newValue);
 //typedef void(^THObserverBlockWithChangeDictionary)(NSDictionary *change);
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
-//                  block:(THObserverBlock)block;
+//                  block:(VBlk)block;
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
-//         oldAndNewBlock:(THObserverBlockWithOldAndNew)block;
+//         oldAndNewBlock:(ObjObjBlk)block;
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
 //                options:(NSKeyValueObservingOptions)options
-//            changeBlock:(THObserverBlockWithChangeDictionary)block;
+//            changeBlock:(DBlk)block;
 //
 //#pragma mark -
 //#pragma mark Target-action based observers.
@@ -53,12 +53,12 @@
 ////
 //// Both the observer and the target are weakly referenced internally.
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
 //                 target:(id)target
 //                 action:(SEL)action;
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
 //                options:(NSKeyValueObservingOptions)options
 //                 target:(id)target
@@ -79,12 +79,12 @@
 ////
 //// Both the observer and the target are weakly referenced internally.
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
 //                 target:(id)target
 //            valueAction:(SEL)valueAction;
 //
-//+ (id)observerForObject:(id)object
+//+ observerForObject:(id)object
 //                keyPath:(NSString *)keyPath
 //                options:(NSKeyValueObservingOptions)options
 //                 target:(id)target
@@ -97,7 +97,7 @@
 //// This is a one-way street. Call it to stop the observer functioning.
 //// The THObserver will do this cleanly when it deallocs, but calling it manually
 //// can be useful in ensuring an orderly teardown.
-//- (void)stopObserving;
+//- _Void_ stopObserving;
 //
 //@end
 #import "AZObserversAndBinders.h"
@@ -116,7 +116,7 @@ typedef enum THObserverBlockArgumentsKind {
     THObserverBlockArgumentsChangeDictionary
 } THObserverBlockArgumentsKind;
 
-- (id)initForObject:(id)object
+- initForObject:(id)object
             keyPath:(NSString *)keyPath
             options:(NSKeyValueObservingOptions)options
               block:(dispatch_block_t)block
@@ -140,14 +140,14 @@ typedef enum THObserverBlockArgumentsKind {
     return self;
 }
 
-- (void)dealloc
+- _Void_ dealloc
 {
     if(_observedObject) {
         [self stopObserving];
     }
 }
 
-- (void)stopObserving
+- _Void_ stopObserving
 {
     [_observedObject removeObserver:self forKeyPath:_keyPath];
     _block = nil;
@@ -155,20 +155,20 @@ typedef enum THObserverBlockArgumentsKind {
     _observedObject = nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath
+- _Void_ observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context
 {
     switch((THObserverBlockArgumentsKind)context) {
         case THObserverBlockArgumentsNone:
-            ((THObserverBlock)_block)();
+            ((VBlk)_block)();
             break;
         case THObserverBlockArgumentsOldAndNew:
-            ((THObserverBlockWithOldAndNew)_block)(change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey]);
+            ((ObjObjBlk)_block)(change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey]);
             break;
         case THObserverBlockArgumentsChangeDictionary:
-            ((THObserverBlockWithChangeDictionary)_block)(change);
+            ((DBlk)_block)(change);
             break;
         default:
             [NSException raise:NSInternalInconsistencyException format:@"%s called on %@ with unrecognised context (%p)", __func__, self, context];
@@ -179,9 +179,9 @@ typedef enum THObserverBlockArgumentsKind {
 #pragma mark -
 #pragma mark Block-based observer construction.
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
-                  block:(THObserverBlock)block
+                  block:(VBlk)block
 {
     return [[self alloc] initForObject:object
                                keyPath:keyPath
@@ -190,9 +190,9 @@ typedef enum THObserverBlockArgumentsKind {
                     blockArgumentsKind:THObserverBlockArgumentsNone];
 }
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
-         oldAndNewBlock:(THObserverBlockWithOldAndNew)block
+         oldAndNewBlock:(ObjObjBlk)block
 {
     return [[self alloc] initForObject:object
                                keyPath:keyPath
@@ -201,10 +201,10 @@ typedef enum THObserverBlockArgumentsKind {
                     blockArgumentsKind:THObserverBlockArgumentsOldAndNew];
 }
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
                 options:(NSKeyValueObservingOptions)options
-            changeBlock:(THObserverBlockWithChangeDictionary)block
+            changeBlock:(DBlk)block
 {
     return [[self alloc] initForObject:object
                                keyPath:keyPath
@@ -233,7 +233,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     return argumentCount;
 }
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
                 options:(NSKeyValueObservingOptions)options
                  target:(id)target
@@ -324,7 +324,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     return ret;
 }
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
                  target:(id)target
                  action:(SEL)action
@@ -336,7 +336,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
 #pragma mark -
 #pragma mark Value-only target-action observers.
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
                 options:(NSKeyValueObservingOptions)options
                  target:(id)target
@@ -346,7 +346,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     
     __weak id wTarget = target;
 
-    THObserverBlockWithChangeDictionary block = nil;
+    DBlk block = nil;
     
     NSUInteger actionArgumentCount = SelectorArgumentCount(valueAction);
     
@@ -398,7 +398,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     return ret;
 }
 
-+ (id)observerForObject:(id)object
++ observerForObject:(id)object
                 keyPath:(NSString *)keyPath
                  target:(id)target
             valueAction:(SEL)valueAction
@@ -414,7 +414,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     THObserver *_observer;
 }
 
-- (id)initForBindingFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
+- initForBindingFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
                       toObject:(id)toObject keyPath:(NSString *)toKeyPath
            transformationBlock:(THBinderTransformationBlock)transformationBlock
 {
@@ -422,7 +422,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
         __weak id wToObject = toObject;
         NSString *myToKeyPath = [toKeyPath copy];
         
-        THObserverBlockWithChangeDictionary changeBlock;
+        DBlk changeBlock;
         if(transformationBlock) {
             changeBlock = [^(NSDictionary *change) {
                 [wToObject setValue:transformationBlock(change[NSKeyValueChangeNewKey])
@@ -443,13 +443,13 @@ static NSUInteger SelectorArgumentCount(SEL selector)
     return self;
 }
 
-- (void)stopBinding
+- _Void_ stopBinding
 {
     [_observer stopObserving];
     _observer = nil;
 }
 
-+ (id)binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
++ binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
               toObject:(id)toObject keyPath:(NSString *)toKeyPath
 {
     return [[self alloc] initForBindingFromObject:fromObject keyPath:fromKeyPath
@@ -457,7 +457,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
                               transformationBlock:nil];
 }
 
-+ (id)binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
++ binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
               toObject:(id)toObject keyPath:(NSString *)toKeyPath
       valueTransformer:(NSValueTransformer *)valueTransformer
 {
@@ -468,7 +468,7 @@ static NSUInteger SelectorArgumentCount(SEL selector)
                               }];
 }
 
-+ (id)binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
++ binderFromObject:(id)fromObject keyPath:(NSString *)fromKeyPath
               toObject:(id)toObject keyPath:(NSString *)toKeyPath
    transformationBlock:(THBinderTransformationBlock)transformationBlock
 {
